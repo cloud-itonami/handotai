@@ -1,0 +1,4 @@
+{:schema "etzhayyim.migration/v1"
+ :source {:repository "etzhayyim/root" :revision "6fd297f38fe1b547e1d4c15ead9941c6ebaa3b31" :path "60-apps/etzhayyim-project-handotai" :tree "60cd0191e3e462c66c77d35012a96572abae8250" :tracked-files 16 :bytes 36851}
+ :destination {:repository "etzhayyim/com-etzhayyim-app-handotai"}
+ :identity {:allowed-additions ["README.edn" "migration.edn"]}}

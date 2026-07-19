@@ -1,0 +1,10 @@
+{
+  "name": "etzhayyim-wasm-handotai-dtyy44cr",
+  "version": "1.0.0",
+  "description": "handotai.etzhayyim.com TS-native semiconductor intelligence platform",
+  "main": "src/app.ts",
+  "type": "module",
+  "dependencies": {
+    "@etzhayyim/kotodama-host-sdk": "workspace:*"
+  }
+}

@@ -1,0 +1,165 @@
+{
+  "@context": "https://etzhayyim.com/ns/kotodama/v1",
+  "@id": "did:web:handotai.etzhayyim.com",
+  "component": {
+    "env": {
+      "CRAWL_INTERVAL_MIN": "15",
+      "MURAKUMO_URL": "https://murakumo.etzhayyim.com/api/openai/v1/chat/completions"
+    },
+    "path": "/wasm/component.wasm"
+  },
+  "convoSystemPrompt": "You are handotai agent. Handotai — AI Agent for semiconductor intelligence and analytics. Respond helpfully in the users language.",
+  "duties": [
+    "勤労の義務"
+  ],
+  "entities": [
+    {
+      "did": "did:web:handotai.etzhayyim.com:writer:pcw",
+      "id": "writer-pcw",
+      "name": "PC Watch",
+      "role": "news-writer",
+      "source": {
+        "language": "ja",
+        "type": "rss",
+        "url": "https://pc.watch.impress.co.jp/data/rss/1.0/pcw/feed.rdf"
+      }
+    },
+    {
+      "did": "did:web:handotai.etzhayyim.com:writer:itm",
+      "id": "writer-itm",
+      "name": "ITmedia NEWS",
+      "role": "news-writer",
+      "source": {
+        "language": "ja",
+        "type": "rss",
+        "url": "https://rss.itmedia.co.jp/rss/2.0/news_bursts.xml"
+      }
+    },
+    {
+      "did": "did:web:handotai.etzhayyim.com:writer:pubk",
+      "id": "writer-pubk",
+      "name": "Publickey",
+      "role": "news-writer",
+      "source": {
+        "language": "ja",
+        "type": "rss",
+        "url": "https://www.publickey1.jp/atom.xml"
+      }
+    },
+    {
+      "did": "did:web:handotai.etzhayyim.com:writer:semia",
+      "id": "writer-semia",
+      "name": "SemiAnalysis",
+      "role": "news-writer",
+      "source": {
+        "language": "en",
+        "type": "rss",
+        "url": "https://www.semianalysis.com/feed"
+      }
+    },
+    {
+      "did": "did:web:handotai.etzhayyim.com:writer:semie",
+      "id": "writer-semie",
+      "name": "Semiconductor Engineering",
+      "role": "news-writer",
+      "source": {
+        "language": "en",
+        "type": "rss",
+        "url": "https://semiengineering.com/feed/"
+      }
+    },
+    {
+      "did": "did:web:handotai.etzhayyim.com:writer:eet",
+      "id": "writer-eet",
+      "name": "EE Times",
+      "role": "news-writer",
+      "source": {
+        "language": "en",
+        "type": "rss",
+        "url": "https://www.eetimes.com/feed/"
+      }
+    }
+  ],
+  "governance": {
+    "raci": "responsible",
+    "classification": "internal",
+    "complianceFrameworks": [
+      "handotai-policy"
+    ]
+  },
+  "kpi": [
+    "credits の獲得"
+  ],
+  "name": "handotai",
+  "nanoid": "dtyy44cr",
+  "performerType": "service",
+  "pool": {},
+  "profile": {
+    "agentType": "autonomous",
+    "capabilities": [
+      "semiconductor-intelligence",
+      "b2b-analytics"
+    ],
+    "description": "Handotai — AI Agent for semiconductor intelligence and analytics",
+    "displayName": "Handotai",
+    "isBot": true,
+    "operator": "etzhayyim.com"
+  },
+  "project": "handotai",
+  "runtimeType": "worker",
+  "space": {
+    "channels": [
+      {
+        "default": true,
+        "description": "Latest semiconductor articles and news",
+        "kind": "public",
+        "name": "handotai-feed"
+      },
+      {
+        "description": "Daily and weekly digest summaries",
+        "kind": "public",
+        "name": "handotai-digest"
+      },
+      {
+        "description": "Alert notifications for tracked entities and keywords",
+        "kind": "public",
+        "name": "handotai-alerts"
+      }
+    ],
+    "description": "Semiconductor news, analysis, and market intelligence",
+    "historyVisibility": "world-readable",
+    "joinRule": "public",
+    "name": "Handotai Intelligence"
+  },
+  "subDidCommand": "RegisterWriterProfiles",
+  "triggers": {
+    "http": {
+      "listen": "0.0.0.0:8080",
+      "spa": true,
+      "staticDir": "/wasm/svelte/dist",
+      "routes": [
+        "/..."
+      ]
+    },
+    "subscribeRepos": {
+      "collections": [
+        "com.etzhayyim.apps.handotai.source",
+        "com.etzhayyim.apps.handotai.article",
+        "com.etzhayyim.apps.handotai.digest",
+        "com.etzhayyim.apps.handotai.report",
+        "com.etzhayyim.apps.handotai.alert",
+        "com.etzhayyim.apps.handotai.subscription",
+        "app.bsky.feed.post",
+        "app.bsky.feed.like",
+        "app.bsky.feed.repost",
+        "app.bsky.graph.follow"
+      ]
+    }
+  },
+  "ui": {},
+  "uiType": "appview",
+  "yata": {
+    "dataDir": "/data/yata",
+    "graphUri": "/data/graph"
+  }
+}
