@@ -136,7 +136,7 @@
     "http": {
       "listen": "0.0.0.0:8080",
       "spa": true,
-      "staticDir": "/wasm/svelte/dist",
+      "staticDir": "/wasm/cljs/public",
       "routes": [
         "/..."
       ]
