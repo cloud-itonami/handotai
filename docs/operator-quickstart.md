@@ -168,64 +168,51 @@ DISPATCHER_URL=https://example.com node /tmp/handotai-dispatch.mjs "$APP"
 上流の応答（ここでは example.com の 405）がそのまま返っている。つまりこの欠陥は
 **上流が落ちたときにだけ**現れる —— 一番壊れてほしくない場面である。
 
-## 6. frontend を建てる（committed な状態からは建たない）
+## 6. frontend を建てる（2026-08-26: Svelte から ClojureScript へ移行済み）
 
-**そのままでは 2 箇所で止まる。** 順に:
-
-```bash
-cd appview/etzhayyim-wasm-handotai-dtyy44cr/svelte
-npm install --userconfig /dev/null
-```
-
-```
-npm error code EUNSUPPORTEDPROTOCOL
-npm error Unsupported URL Type "workspace:": workspace:*
-```
-
-`@etzhayyim/design-system` は workspace protocol で書かれているが workspace root は
-無く、npm registry でも 404。**`src/` はこの依存を import していない**（`App.svelte`
-に import 文は 1 つも無い）ので、外せば進む。以下は repo を変えずに scratch で測る:
+**`svelte/` は削除した。** frontend は今
+`appview/etzhayyim-wasm-handotai-dtyy44cr/cljs/`（shadow-cljs + reagent +
+re-frame + jp-go-dds）にある。以下は移行後にこの木で実際に実行した出力である。
 
 ```bash
-cp -R . /tmp/ho-svelte && cd /tmp/ho-svelte
-node -e 'const p=require("./package.json");delete p.dependencies;
-         require("fs").writeFileSync("package.json",JSON.stringify(p,null,2))'
-npm install --userconfig /dev/null
+cd appview/etzhayyim-wasm-handotai-dtyy44cr/cljs
+npm install
 ```
 
 ```
-npm error code ERESOLVE
-npm error ERESOLVE unable to resolve dependency tree
-npm error While resolving: @etzhayyim/handotai-frontend@0.0.1
-npm error Found: vite@6.4.3          (dev vite@"^6.4.2" from the root project)
-npm error Could not resolve dependency:
-npm error peer vite@"^5.0.0" from @sveltejs/vite-plugin-svelte@4.0.4
+added 129 packages, and audited 130 packages in 4s
 ```
-
-2 つ目は repo の中で閉じた矛盾（plugin が vite 5 を要求し、devDeps が vite 6 を固定）。
-逸脱を明示して通す:
 
 ```bash
-npm install --legacy-peer-deps --userconfig /dev/null      # 実測 7.2s / 11.9s
-node ~/github/com-junkawasaki/scripts/resource-guard.mjs run build -- npx vite build
+node ~/github/com-junkawasaki/scripts/resource-guard.mjs run build -- npx shadow-cljs compile app
 ```
 
 ```
-✓ 135 modules transformed.
-dist/index.html                 0.42 kB │ gzip: 0.28 kB
-dist/assets/index-C-zwCK5o.css  0.24 kB │ gzip: 0.21 kB
-dist/assets/index-BPABFE7-.js   2.67 kB │ gzip: 1.32 kB
-✓ built in 966ms                          （2 回の実測は 966ms / 1.52s。hash は両方同じ）
+[:app] Build completed. (111 files, 110 compiled, 0 warnings, 12.68s)
 ```
 
-**建つ。ただし建つのは placeholder である** —— bundle に入っている文字列は
-`"Vite entry scaffold after SvelteKit cleanup."`。CSS 0.24 kB は `App.svelte` の
-scoped style で、tailwind は 1 byte も出ていない（`@tailwind` ディレクティブも
-CSS import も無いため、設定ファイルは inert）。
+```bash
+node ~/github/com-junkawasaki/scripts/resource-guard.mjs run build -- npx shadow-cljs compile test
+node out/tests.js
+```
 
-⚠ `vite build` はこの workspace では**必ず `resource-guard.mjs` 経由で起動する**
-（同時 1 本）。他セッションが lock を持っていれば `build is already running` で
-exit 2 する —— これは失敗ではなく順番待ちである（実際 1 度待った）。
+```
+[:test] Build completed. (112 files, 111 compiled, 0 warnings, 10.00s)
+
+Testing handotai.app-test
+
+Ran 4 tests containing 6 assertions.
+0 failures, 0 errors.
+```
+
+**建つ。ただし建つのは placeholder である** —— レンダされる文字列は移行前と同じ
+`"Vite entry scaffold after SvelteKit cleanup."`（heading は
+`etzhayyim-wasm-handotai-dtyy44cr`）。re-frame の `:initialize-db` /
+`:heading` / `:message` を経由するようになっただけで、内容は変えていない。
+
+⚠ `shadow-cljs compile` はこの workspace では**必ず `resource-guard.mjs` 経由で
+起動する**（同時 1 本）。他セッションが lock を持っていれば `build is already
+running` で exit 2 する —— これは失敗ではなく順番待ちである。
 
 ## 7. `npm ci` を試したいなら（appview 側）
 

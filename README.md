@@ -1,14 +1,15 @@
 # handotai 半導体 — appview の**実装側**（descriptor は `handotai-actor`）
 
-**ここにあるのは 1 本の依存ゼロな Cloudflare Worker と、SvelteKit を剥がした跡の
-Vite scaffold である。半導体の記事を集めるものは、この repo には無い。**
+**ここにあるのは 1 本の依存ゼロな Cloudflare Worker と、Svelte から移行した
+ClojureScript（shadow-cljs + reagent + re-frame + jp-go-dds）の frontend scaffold
+である。半導体の記事を集めるものは、この repo には無い。**
 
 `handotai`（半導体）は主題を言うが、**この repo が何であるか**を言わない。しかも west
 には `handotai` という名前の repo が**もう 1 つ**ある。だから最初に名乗る:
 
 | west path | これは何か | 中身 |
 |---|---|---|
-| `orgs/cloud-itonami/handotai` ← **ここ** | **実装**（`README.edn` の `:kind :app`） | `appview/etzhayyim-wasm-handotai-dtyy44cr/` — Worker 1 本 + Vite scaffold + LFS ポインタ |
+| `orgs/cloud-itonami/handotai` ← **ここ** | **実装**（`README.edn` の `:kind :app`） | `appview/etzhayyim-wasm-handotai-dtyy44cr/` — Worker 1 本 + ClojureScript frontend scaffold + LFS ポインタ |
 | `orgs/cloud-itonami/handotai-actor` | actor の **descriptor / identity 面** | `actor-manifest.jsonld`・`.well-known/did.json`・`kotoba.app.edn` |
 
 出自が違う。ここは etzhayyim monorepo の `60-apps/` 由来、兄弟は `20-actors/` 由来。
@@ -77,13 +78,31 @@ files にそれらは無い。** 名指しで不在:
 `wrangler.toml` / `wasm/` ディレクトリ（実際は `appview/`）。`kotodama.jsonld` の
 `component.path: /wasm/component.wasm` も同じずれ。
 
-`svelte/` が実際に描くのは
+**2026-08-26 実測: `svelte/` は削除し、同じ内容を `cljs/` へ移行した**
+（Svelte 5 + Vite 6 → ClojureScript(shadow-cljs) + reagent + re-frame + jp-go-dds）。
+`cljs/` が実際に描くのは
 **`etzhayyim-wasm-handotai-dtyy44cr` / "Vite entry scaffold after SvelteKit cleanup."**
-という 2 行の placeholder である（`src/App.svelte` 448 B）。tailwind と postcss の設定は
-在るが `@tailwind` ディレクティブも CSS import も無く、**inert**（ビルド後の CSS
-0.24 kB は App.svelte の scoped style だけ）。
+という同じ 2 行の placeholder である（`src/handotai/app.cljs`。移行は忠実な port で、
+機能を足していない）。tailwind と postcss の設定は `svelte/` と共に消えた ——
+`@tailwind` ディレクティブも CSS import も持たない inert な設定だったので、失うものは
+無い。CSS は jp-go-dds の vendored `dds.css` に代わった。
 
 冒頭の `DEPRECATED` 行は正しい方向を指している —— identity は `handotai-actor` が持つ。
+
+## Frontend
+
+```bash
+cd appview/etzhayyim-wasm-handotai-dtyy44cr/cljs
+npm install
+npx shadow-cljs compile app      # -> public/js/, served alongside public/index.html
+npx shadow-cljs compile test && node out/tests.js   # cljs.test over the re-frame event/sub logic
+```
+
+ClojureScript（shadow-cljs）+ reagent 1.2.0 + re-frame 1.4.3、`jp-go-dds.core`
+（デジタル庁デザインシステム）hiccup で描画 —— このワークスペースの base design
+system。`public/index.html` の inline CSS は `jp-go-dds.page/->page` で一度生成した
+ものである。旧 Svelte 5 + Vite 6 frontend（`appview/etzhayyim-wasm-handotai-dtyy44cr/svelte`、
+削除済み）からの移行。
 
 ## 既知の欠陥 — 上流失敗が 500 になる
 
