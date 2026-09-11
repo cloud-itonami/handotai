@@ -94,8 +94,8 @@ files にそれらは無い。** 名指しで不在:
 ```bash
 cd appview/etzhayyim-wasm-handotai-dtyy44cr/cljs
 npm install
-npx shadow-cljs compile app      # -> public/js/, served alongside public/index.html
-npx shadow-cljs compile test && node out/tests.js   # cljs.test over the re-frame event/sub logic
+amu compile --target wasm32-browser app      # -> public/js/, served alongside public/index.html
+amu compile --target wasm32-browser test && node out/tests.js   # cljs.test over the re-frame event/sub logic
 ```
 
 ClojureScript（shadow-cljs）+ reagent 1.2.0 + re-frame 1.4.3、`jp-go-dds.core`
