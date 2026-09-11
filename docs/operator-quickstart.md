@@ -184,7 +184,7 @@ added 129 packages, and audited 130 packages in 4s
 ```
 
 ```bash
-node ~/github/com-junkawasaki/scripts/resource-guard.mjs run build -- npx shadow-cljs compile app
+node ~/github/com-junkawasaki/scripts/resource-guard.mjs run build -- amu compile --target wasm32-browser app
 ```
 
 ```
@@ -192,7 +192,7 @@ node ~/github/com-junkawasaki/scripts/resource-guard.mjs run build -- npx shadow
 ```
 
 ```bash
-node ~/github/com-junkawasaki/scripts/resource-guard.mjs run build -- npx shadow-cljs compile test
+node ~/github/com-junkawasaki/scripts/resource-guard.mjs run build -- amu compile --target wasm32-browser test
 node out/tests.js
 ```
 
@@ -210,7 +210,7 @@ Ran 4 tests containing 6 assertions.
 `etzhayyim-wasm-handotai-dtyy44cr`）。re-frame の `:initialize-db` /
 `:heading` / `:message` を経由するようになっただけで、内容は変えていない。
 
-⚠ `shadow-cljs compile` はこの workspace では**必ず `resource-guard.mjs` 経由で
+⚠ `amu compile --target wasm32-browser` はこの workspace では**必ず `resource-guard.mjs` 経由で
 起動する**（同時 1 本）。他セッションが lock を持っていれば `build is already
 running` で exit 2 する —— これは失敗ではなく順番待ちである。
 
