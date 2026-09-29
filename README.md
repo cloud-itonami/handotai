@@ -40,16 +40,16 @@ GET  /nothing           404 {"error":"not found"}
 ## 動かないもの（2026-08-13 実測）
 
 **この repo からデプロイはできない。** wrangler 設定（`wrangler.toml` / `.jsonc`）が
-無く、`CLAUDE.md` が書く `etzhayyim build` / `etzhayyim deploy` の CLI も PATH に無い。
+無く、`AGENTS.md` が書く `etzhayyim build` / `etzhayyim deploy` の CLI も PATH に無い。
 
 宛先も無い:
 
 | 名乗り | どこから | 実測 |
 |---|---|---|
-| `handotai.etzhayyim.com` | `CLAUDE.md` の health check、`app.ts` の DID | **NXDOMAIN** |
+| `handotai.etzhayyim.com` | `AGENTS.md` の health check、`app.ts` の DID | **NXDOMAIN** |
 | `dispatcher.etzhayyim.com` | `app.ts` の `DISPATCHER_URL` 既定値 | **NXDOMAIN** |
 | `murakumo.etzhayyim.com` | `kotodama.jsonld` の `MURAKUMO_URL` | **NXDOMAIN** |
-| `atproto.etzhayyim.com` | `CLAUDE.md` の seed 手順 | 解決する。ただし当 app の NSID は **501 MethodNotImplemented** |
+| `atproto.etzhayyim.com` | `AGENTS.md` の seed 手順 | 解決する。ただし当 app の NSID は **501 MethodNotImplemented** |
 | `did:web:etzhayyim.com:actor:handotai` | 兄弟 repo の `did.json` | **200**（唯一解決する名前。ここの DID ではない） |
 
 つまり `/xrpc/*` は転送先を持たない。そして転送先が落ちたとき、この Worker は
@@ -68,9 +68,9 @@ exist on the server"}` が返る。加えて `.gitattributes` が無いので
 `npm ci` は 0.5s で `EUNSUPPORTEDPROTOCOL` を返す。`@etzhayyim/*` は 3 つとも
 npm registry で **404**。
 
-## `CLAUDE.md` を仕様として読まないこと
+## `AGENTS.md` を仕様として読まないこと
 
-`CLAUDE.md`（9,093 B）は W Protocol event stream・yata SQL・OTEL→B2・80 本の seed 記事・
+`AGENTS.md`（9,093 B）は W Protocol event stream・yata SQL・OTEL→B2・80 本の seed 記事・
 75 対の静的翻訳・SvelteKit SSR を持つシステムを記述する。**この repo の 18 tracked
 files にそれらは無い。** 名指しで不在:
 
