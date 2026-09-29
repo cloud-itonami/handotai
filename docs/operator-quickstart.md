@@ -69,7 +69,7 @@ murakumo.etzhayyim.com
 atproto.etzhayyim.com        172.67.179.128 104.21.51.111
 ```
 
-**空欄 = NXDOMAIN。** 前 3 つは `CLAUDE.md` / `src/app.ts` / `kotodama.jsonld` が
+**空欄 = NXDOMAIN。** 前 3 つは `AGENTS.md` / `src/app.ts` / `kotodama.jsonld` が
 名指しする host である。唯一解決する 1 つも、この app の NSID を実装していない:
 
 ```bash
@@ -81,7 +81,7 @@ curl -s -X POST https://atproto.etzhayyim.com/xrpc/com.etzhayyim.apps.handotai.s
 {"error":"MethodNotImplemented","message":"com.etzhayyim.apps.handotai.seedArticles is not implemented by this PDS"}
 ```
 
-（`CLAUDE.md` の seed ループは 80 回これを叩く。80 回とも 501 になる。）
+（`AGENTS.md` の seed ループは 80 回これを叩く。80 回とも 501 になる。）
 
 解決する名前は兄弟 repo 側にある —— `curl -s -o /dev/null -w '%{http_code}\n'
 https://etzhayyim.com/actor/handotai/did.json` → `200`。
